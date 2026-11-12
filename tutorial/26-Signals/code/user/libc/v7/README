@@ -1,0 +1,31 @@
+These files are the C library of Seventh Edition Unix (1979), from
+usr/src/libc/stdio and usr/src/libc/gen of the V7 distribution archived by
+The Unix Heritage Society (https://www.tuhs.org/). Caldera released V7
+under a BSD-style license in 2002:
+https://www.tuhs.org/Archive/Caldera-license.pdf
+
+They are compiled as 1979 C (see V7_CFLAGS in the Makefile). Every change
+from the original is marked with a "toyos:" comment; `grep -n toyos *.c`
+lists them all. Compare with the originals in the V7 tree to see how
+little a 45-year-old C library needs to run on a new machine.
+
+What is NOT here, because it was PDP-11 assembly or system-specific, and
+is rewritten in the parent directory (user/libc/):
+
+  crt0.asm      program startup             (V7: csu/crt0.s)
+  syscall.c     system call stubs           (V7: sys/*.s)
+  doprnt.c      the printf engine           (V7: stdio/doprnt.s, fltpr.s)
+  printf.c      printf, fprintf, sprintf    (V7 passed &args: not portable)
+  scanf.c       scanf, fscanf, sscanf       (same)
+  setjmp.asm    setjmp, longjmp             (V7: gen/setjmp.s)
+  fpmath.c      frexp, ldexp, modf          (V7: gen/*11.s)
+  exit.c        exit                        (V7: gen/cuexit.s)
+  abort.c       abort                       (V7: gen/abort.s)
+  (sbrk, brk    in syscall.c                (V7: sys/sbrk.s))
+  (signal       in syscall.c                (V7: sys/signal.s))
+  sigtramp.asm  calls signal handlers       (V7: the tvect stubs in sys/signal.s)
+  ftime.c       ftime, built on time()      (V7: a system call)
+  string.c      memcpy & co. (not in V7; GCC needs them)
+
+popen.c and system.c arrived with pipes (lesson 25), sleep.c with
+signals (lesson 26).

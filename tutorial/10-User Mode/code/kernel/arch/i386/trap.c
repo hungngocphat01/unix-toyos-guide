@@ -1,0 +1,85 @@
+/* trap.c -- every interrupt and exception ends up in trap(). */
+#include "arch/i386/trap.h"
+#include "arch/i386/pic.h"
+#include "arch/i386/cpu.h"
+#include "lib/kprintf.h"
+#include "lib/panic.h"
+
+static const char *exception_names[32] = {
+    "divide error", "debug", "NMI", "breakpoint", "overflow",
+    "bound range", "invalid opcode", "device not available",
+    "double fault", "coprocessor overrun", "invalid TSS",
+    "segment not present", "stack fault", "general protection",
+    "page fault", "reserved", "x87 FPU error", "alignment check",
+    "machine check", "SIMD error", "virtualization", "control protection",
+    "reserved", "reserved", "reserved", "reserved", "reserved", "reserved",
+    "hypervisor injection", "VMM communication", "security", "reserved",
+};
+
+static void (*irq_handlers[NIRQ])(void);
+
+/* Demo for this lesson: count interrupts that arrive while in user mode. */
+static uint32_t irqs_from_user;
+
+/* The low 2 bits of the saved CS = the privilege level we were running at. */
+static int from_user(struct trapframe *tf)
+{
+    return (tf->cs & 3) == 3;
+}
+
+void irq_register(int irq, void (*handler)(void))
+{
+    irq_handlers[irq] = handler;
+}
+
+static void dump_trapframe(struct trapframe *tf)
+{
+    kprintf("trap %lu (%s), err=%lx\n", tf->trapno,
+            tf->trapno < 32 ? exception_names[tf->trapno] : "interrupt", tf->err);
+    if (tf->trapno == T_PAGEFAULT)
+        kprintf("  address=%08lx (%s, %s, %s mode)\n", read_cr2(),
+                tf->err & 1 ? "protection violation" : "page not present",
+                tf->err & 2 ? "write" : "read",
+                tf->err & 4 ? "user" : "kernel");
+    kprintf("  eip=%08lx cs=%04lx eflags=%08lx\n", tf->eip, tf->cs, tf->eflags);
+    kprintf("  eax=%08lx ebx=%08lx ecx=%08lx edx=%08lx\n", tf->eax, tf->ebx, tf->ecx, tf->edx);
+    kprintf("  esi=%08lx edi=%08lx ebp=%08lx\n", tf->esi, tf->edi, tf->ebp);
+    kprintf("  ds=%04lx es=%04lx fs=%04lx gs=%04lx\n",
+            tf->ds & 0xFFFF, tf->es & 0xFFFF, tf->fs & 0xFFFF, tf->gs & 0xFFFF);
+    if (from_user(tf))
+        kprintf("  user esp=%08lx ss=%04lx\n", tf->user_esp, tf->user_ss & 0xFFFF);
+}
+
+void trap(struct trapframe *tf)
+{
+    if (tf->trapno >= T_IRQ0 && tf->trapno < T_IRQ0 + NIRQ) {
+        int irq = tf->trapno - T_IRQ0;
+        if (from_user(tf))
+            irqs_from_user++;
+        /* EOI first: a handler might not return quickly (lesson 24). The
+         * interrupt gate keeps IF=0, so the PIC can't interrupt us anyway. */
+        pic_eoi(irq);
+        if (irq_handlers[irq])
+            irq_handlers[irq]();
+        return;
+    }
+
+    switch (tf->trapno) {
+    case T_BREAKPOINT:
+        /* INT3 is a "trap": the saved EIP is already past the instruction,
+         * so simply returning continues the program. */
+        kprintf("breakpoint at eip=%08lx, continuing\n", tf->eip);
+        return;
+
+    default:
+        dump_trapframe(tf);
+        if (from_user(tf)) {
+            /* Lesson 11 will kill the process instead. */
+            kprintf("user program faulted after %lu interrupts in user mode\n",
+                    irqs_from_user);
+            for (;;)
+                hlt();
+        }
+        panic("unhandled trap %lu", tf->trapno);
+    }
+}
