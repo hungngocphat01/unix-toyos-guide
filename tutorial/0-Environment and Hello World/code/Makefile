@@ -18,7 +18,7 @@ KERNEL  := $(BUILD)/kernel.elf
 LDSCRIPT:= kernel/arch/i386/linker.ld
 
 CFLAGS  := -std=gnu11 -ffreestanding -fno-stack-protector -fno-pic \
-           -O2 -g -Wall -Wextra -Ikernel/include
+           -O2 -g -Wall -Wextra -Ikernel
 ASFLAGS := -f elf32 -g -F dwarf
 LDFLAGS := -T $(LDSCRIPT) -nostdlib -ffreestanding -O2 -g
 

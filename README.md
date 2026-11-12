@@ -26,6 +26,20 @@ $ yes > /dev/null
                                           <- ^C kills yes, not the sleep
 ```
 
+> [!WARNING]
+> **The tutorial is not complete yet.** The reference implementation works
+> for all 27 lessons: every lesson's `code/` folder builds and boots, and
+> the last one runs everything shown above. But only **lessons 0 to 4**
+> have a detailed, step-by-step writeup that teaches the concepts well
+> enough to write the code yourself. **Lessons 5 to 26 are still crude:**
+> their READMEs are short summaries of the code, closer to an index than a
+> tutorial. They are being rewritten one at a time.
+>
+> | Lessons | Code | Writeup |
+> |---|---|---|
+> | 0–4 (booting, console, boot information, GDT, interrupts) | works | detailed tutorial |
+> | 5–26 | works | crude: summary of the code |
+
 ## Why this exists
 
 I've always wanted to write an operating system, for no reason except to
@@ -76,9 +90,12 @@ neighbouring snapshots:
 diff -ru "tutorial/11-System Calls/code" "tutorial/12-Processes and exec/code"
 ```
 
-Every lesson README has the same sections: Goal and Milestone, the concepts
-(with diagrams), a walkthrough of the code, a table of modules, a Test list
-(including ways to break things on purpose), Pitfalls, and References.
+A finished lesson README (lessons 0 to 4 so far) explains each concept from
+scratch, with worked examples using real numbers from the running kernel,
+then guides you through writing the code in small steps that each build and
+run. The reference code for each step is in a collapsed block, so you can
+try first. Each lesson ends with exercises (many of them about breaking
+things on purpose and reading the result), pitfalls, and references.
 
 ### The curriculum
 

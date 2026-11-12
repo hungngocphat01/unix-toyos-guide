@@ -1,7 +1,7 @@
 /* kmain.c -- first C code that runs.
  *
  * Everything here is deliberately crude: VGA and serial are poked directly.
- * Lesson 2 replaces this with proper drivers (dev/vga.c, dev/serial.c) and
+ * Lesson 1 replaces this with proper drivers (dev/vga.c, dev/serial.c) and
  * a kprintf().
  */
 #include <stdint.h>

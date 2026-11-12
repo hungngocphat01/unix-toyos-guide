@@ -61,17 +61,22 @@ A **learning project** with two parts:
 
 ### When working on the tutorial (`tutorial/`)
 
-5. The tutorial **is** yours to write and fix: lesson READMEs, the
+5. **Read [`tutorial/FEEDBACK.md`](tutorial/FEEDBACK.md) first.** It holds
+   the owner's feedback on the lessons and the checklist every lesson
+   README must pass. When the owner gives new feedback about the tutorial,
+   add it there (what they said, how you interpreted it, what to avoid).
+6. The tutorial **is** yours to write and fix: lesson READMEs, the
    reference code in `tutorial/*/code/`, `tutorial/README.md`, this file.
-6. **Every claim in a README must be verified against the lesson's `code/`**:
+7. **Every claim in a README must be verified against the lesson's `code/`**:
    build it, boot it, run the milestone and the tests. Quote real output.
-7. **Each `code/` is a full snapshot**, not a diff. A fix to code that
+8. **Each `code/` is a full snapshot**, not a diff. A fix to code that
    several lessons share must be applied to **every** later snapshot that
    contains it (and rebuilt).
-8. Match the existing style: lesson README sections (Goal, Milestone,
-   Reference code, concepts, Modules, Test, Pitfalls, References); code
-   comments that explain why; V7 names where V7 had the concept.
-9. Code taken from V7 (`user/libc/v7/`, `user/v7bin/`) stays as close to the
+9. Lesson README shape: what you'll build and see, then the teaching
+   itself in steps (concept first, then the task, a check, and the
+   reference code collapsed), then Exercises, Pitfalls, References. Code
+   comments explain why; V7 names where V7 had the concept.
+10. Code taken from V7 (`user/libc/v7/`, `user/v7bin/`) stays as close to the
    original as possible; every change is marked with a `toyos:` comment.
 
 ## Toolchain and commands (macOS, Apple Silicon host)
@@ -160,6 +165,11 @@ tutorial/
 | User space | 20–22 | done |
 | Multitasking | 23–26 | done |
 | Booting from a disk image | (27, optional) | not written |
+
+Lesson READMEs rewritten as real tutorials (see `tutorial/FEEDBACK.md`):
+0–4. The others are still in the old, index-like style. When you finish
+rewriting a lesson, update this line AND the status warning at the top of
+the root `README.md` (the lesson range in the text and the table).
 
 The owner's own OS (`kernel/`): lesson 0 barebone. Update this line as they
 progress.

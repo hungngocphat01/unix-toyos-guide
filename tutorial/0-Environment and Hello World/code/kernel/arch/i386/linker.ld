@@ -1,7 +1,7 @@
 /* linker.ld -- where each part of the kernel lives in memory.
  *
  * For now the kernel is linked AND loaded at physical 1 MiB, with paging
- * off, so virtual address == physical address. Lesson 6 changes this to a
+ * off, so virtual address == physical address. Lesson 8 changes this to a
  * "higher-half" kernel linked at 0xC0100000 but still loaded at 1 MiB.
  */
 ENTRY(_start)

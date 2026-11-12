@@ -46,7 +46,7 @@ trap_common:
     call trap
     add esp, 4
 
-; Returning from ANY interrupt goes through here. Lesson 11 also jumps here
+; Returning from ANY interrupt goes through here. Lesson 10 also jumps here
 ; to enter user mode for the first time.
 global trapret
 trapret:
